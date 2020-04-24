@@ -80,12 +80,12 @@ from operator import add
 from pyspark.sql import SparkSession
 from pyspark import SparkContext
 
-spark = SparkSession.builder.appName('abc').getOrCreate()
+spark = SparkSession.builder.appName('CalculatePi').getOrCreate()
 sc=spark.sparkContext
 
 n = 10000000
 
-def inside(p):
+def is_point_inside_unit_circle(p):
     #p is useless here
     x, y = random(), random()
     return 1 if x*x + y*y < 1 else 0
@@ -94,7 +94,7 @@ t_0=time()
 # parallelize creates a spark Resilient Distributed Dataset (RDD)
 # its values are useless in this case but allows us to distribute our calculation (inside function)
 count = sc.parallelize(range(0, n)) \
-             .map(inside).reduce(add)
+             .map(is_point_inside_unit_circle).reduce(add)
 print(np.round(time()-t_0,3),"seconds elapsed for spark approach and n=.",n)
 print("Pi is roughly %f" % (4.0 * count / n))
 
